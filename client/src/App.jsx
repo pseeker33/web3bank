@@ -32,8 +32,12 @@ function App() {
 
   // Cargar contrato
   const loadContract = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    //const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    //getSigner() devuelve una Promise, por lo que necesitas usar await
+    const signer = await provider.getSigner();
     const instance = new ethers.Contract(contractAddress, SimpleBankABI, signer);
     setContract(instance);
     return instance;
@@ -46,9 +50,13 @@ function App() {
     setIsOwner(owner.toLowerCase() === account.toLowerCase());
     const user = await instance.userDetails(account);
     setIsRegistered(user.registrado);
-    if (user.registrado) setUserBalance(ethers.utils.formatEther(user.saldo));
+    if (user.registrado) {
+      // Nueva sintaxis para formatear ethers
+      setUserBalance(ethers.formatEther(user.saldo));
+      //setUserBalance(ethers.utils.formatEther(user.saldo));
+    }
     const treasury = await instance.treasuryBalance();
-    setTreasuryBalance(ethers.utils.formatEther(treasury));
+    setTreasuryBalance(ethers.formatEther(treasury));
   };
 
   // Registrar usuario
@@ -67,7 +75,9 @@ function App() {
   // Depositar
   const deposit = async (amount) => {
     try {
-      const tx = await contract.deposit({ value: ethers.utils.parseEther(amount) });
+      // Nueva sintaxis para parseEther
+      const tx = await contract.deposit({ value: ethers.parseEther(amount) });
+      //const tx = await contract.deposit({ value: ethers.utils.parseEther(amount) });
       await tx.wait();
       toast.success("Depósito realizado con éxito");
       checkContractDetails(account);
@@ -80,7 +90,8 @@ function App() {
   // Retirar
   const withdraw = async (amount) => {
     try {
-      const tx = await contract.withdraw(ethers.utils.parseEther(amount));
+      const tx = await contract.withdraw(ethers.parseEther(amount));
+      //const tx = await contract.withdraw(ethers.utils.parseEther(amount));
       await tx.wait();
       toast.success("Retiro realizado con éxito");
       checkContractDetails(account);
@@ -93,7 +104,8 @@ function App() {
   // Retirar tesorería (solo owner)
   const withdrawTreasury = async (amount) => {
     try {
-      const tx = await contract.withdrawTreasury(ethers.utils.parseEther(amount));
+      const tx = await contract.withdrawTreasury(ethers.parseEther(amount));
+      //const tx = await contract.withdrawTreasury(ethers.utils.parseEther(amount));
       await tx.wait();
       toast.success("Retiro de tesorería realizado con éxito");
       checkContractDetails(account);
