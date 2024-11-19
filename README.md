@@ -59,7 +59,7 @@ SimpleBank/
 ### Paso 1: Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/SimpleBank.git
+git clone https://github.com/pseeker33/SimpleBank.git
 cd SimpleBank
 ```
 
