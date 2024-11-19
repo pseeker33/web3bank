@@ -22,4 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-App-code-para-localhost.txt
+App-improved.jsx
+App-localhost.jsx
