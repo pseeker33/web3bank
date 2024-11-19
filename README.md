@@ -132,6 +132,17 @@ La aplicación estará disponible en `http://localhost:5173`
 2. Monitorea las comisiones acumuladas
 3. Retira los fondos de la tesorería cuando lo desees
 
+## 🌐 DApp en Vivo
+
+Prueba la DApp en: [https://simple-bank-dapp-fawn.vercel.app](https://simple-bank-dapp-fawn.vercel.app)
+
+### Requisitos para Probar
+1. Instala [MetaMask](https://metamask.io/)
+2. Conecta tu wallet a la red Sepolia
+3. Obtén ETH de prueba en [Sepolia Faucet](https://cloud.google.com/application/web3/faucet)  
+
+Obs: recuerda que sólo el propietario del contrato puede retirar fondos de la tesorería  
+
 ## 🤝 Contribuciones
 
 Las contribuciones son siempre bienvenidas. Por favor, sigue estos pasos:
