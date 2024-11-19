@@ -1,5 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
-require('dotenv').config();
+require("dotenv").config();
 
 // Verifica que las variables existan
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "";
@@ -15,10 +15,10 @@ module.exports = {
     sepolia: {
       url: SEPOLIA_RPC_URL,
       accounts: [PRIVATE_KEY],
-      chainId: 11155111
-    }
+      chainId: 11155111,
+    },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY
-  }
+    apiKey: process.env.ETHERSCAN_API_KEY,
+  },
 };

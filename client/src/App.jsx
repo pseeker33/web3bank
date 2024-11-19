@@ -2,11 +2,16 @@ import { useState } from "react";
 //import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import SimpleBankABI from "./SimpleBankABI.json";
+import { networkConfig } from './config';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './App.css'
 
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+// Direccion del contrato en la red local Hardhat. 
+//const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+
+// Direccion del contrato en la red Sepolia
+const contractAddress = "0xd14B23214E30Fda460205f5a5461860e1CF460a2";
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -15,13 +20,42 @@ function App() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [treasuryBalance, setTreasuryBalance] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
+  //const [network, setNetwork] = useState(null);
+
+  // Función para verificar la red
+  const checkNetwork = async () => {
+    const { ethereum } = window;
+    const chainId = await ethereum.request({ method: 'eth_chainId' });
+    const decimalChainId = parseInt(chainId, 16);
+    
+    if (!networkConfig[decimalChainId]) {
+      toast.error("Por favor, conecta tu wallet a la red Sepolia");
+      return false;
+    }
+    return true;
+  };
 
   // Conectar wallet
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
       if (!ethereum) return toast.error("MetaMask no está instalado");
+
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      const isCorrectNetwork = await checkNetwork();
+
+      if (!isCorrectNetwork) {
+        try {
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0xaa36a7' }], // chainId de Sepolia en hex
+          });
+        } catch (error) {
+          console.error(error);
+          toast.error("Por favor, cambia manualmente a la red Sepolia");
+          return;
+        }
+      }
       setAccount(accounts[0]);
       checkContractDetails(accounts[0]);
     } catch (error) {
