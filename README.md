@@ -151,10 +151,9 @@ Si este proyecto te ha sido útil, considera [regalame](https://github.com/pseek
 **Hoover Zavala**  
 **Data analyst | Web developer | Blockchain enthusiast | Python | Bubble.io | React.js | Solidity**  
 
-**Correo:**  zavalah222@gmail.com  
-**Mis redes:**    
+zavalah222@gmail.com      
+[![Follow us on LinkedIn](https://img.shields.io/badge/LinkedIn-pseeker-blue?style=flat&logo=linkedin&logoColor=b0c0c0&labelColor=363D44)](https://www.linkedin.com/in/hoover-zavala-63a64825b/)  
 [![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2Fpseeker222&label=%40pseeker222)](https://twitter.com/pseeker222)
-[![Follow us on LinkedIn](https://img.shields.io/badge/LinkedIn-pseeker-blue?style=flat&logo=linkedin&logoColor=b0c0c0&labelColor=363D44)](https://www.linkedin.com/in/hoover-zavala-63a64825b/)
 
 
 ## 📝 Licencia
