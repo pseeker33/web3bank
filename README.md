@@ -22,7 +22,7 @@ SimpleBank es una DApp que simula las funciones básicas de un banco descentrali
 
 ```
 SimpleBank/
-├── Contract/
+├── contract/
 │   ├── contracts/
 │   │   └── SimpleBank.sol
 │   ├── scripts/
@@ -43,8 +43,8 @@ SimpleBank/
 
 ### 📝 Archivos Principales
 
-- `Contract/contracts/SimpleBank.sol`: Contrato inteligente principal que maneja toda la lógica bancaria
-- `Contract/scripts/deploy.js`: Script para desplegar el contrato en la red
+- `contract/contracts/SimpleBank.sol`: Contrato inteligente principal que maneja toda la lógica bancaria
+- `contract/scripts/deploy.js`: Script para desplegar el contrato en la red
 - `client/src/App.jsx`: Componente principal de React que maneja la interfaz de usuario
 - `client/src/SimpleBankABI.json`: ABI del contrato necesario para la interacción frontend-contrato
 
@@ -67,7 +67,7 @@ cd SimpleBank
 
 ```bash
 # Instalar dependencias del contrato
-cd Contract
+cd contract
 npm install
 
 # Instalar dependencias del cliente
