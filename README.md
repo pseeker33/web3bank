@@ -1,7 +1,7 @@
 # SimpleBank DApp 🏦  
 
 <p align="center">
-    <img src="./client/public/bank-crypto-ethereum.jpg"  height=500>
+    <img src="./client/public/bank-crypto-ethereum.jpg"  height=400>
     
 </p>
 
