@@ -1,4 +1,4 @@
-# SimpleBank DApp 🏦  
+# Proyecto Web3: SimpleBank Dapp 🏦  
 
 <p align="center">
     <img src="./client/public/bank-crypto-ethereum.jpg"  height=400>
@@ -14,6 +14,15 @@
 [![ethers.js](https://img.shields.io/badge/ethers.js-2535a0?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVDiNpdM/S5VhGIfx72NKELQkQYsNbiK0BG3hW+gNtFQgRLQ0t7i5aA4JQeDS4Oa7EF0dpHcQGsIhCIRQa4j4KzheHc7peR44Z7kv7ut7nfv+nZBSQghRHMISvuEHZjCKL1hBd845p5RyBXfxF9+xhk+4wC/s4zYGcqkq7xvYxDb2sIV32E2Nr9DS14AXOMYnzGEcH7CFU7wt3TXOqzeBp1jECB7gGe7hENPYwzqe4wjbWL0ywFp6RI8QYgIvsY8vmMR0zvkQbzCBebzCWkopX9nUrxDCC4xhMed8FkJoYxJHOc9JKY19wEMcYyeldBZC6GAaDe2U0u9m838YfzjPW616b8r/x5kQwmBK6axX/BvJ+GGyHnPytQAAAABJRU5ErkJggg==)](https://docs.ethers.org/v6/)
 
 SimpleBank es una DApp que simula las funciones básicas de un banco descentralizado en la blockchain de Ethereum. Permite a los usuarios conectar sus wallets MetaMask, registrarse, realizar depósitos y retiros, mientras cobra una pequeña comisión que se acumula en una tesorería que solo el propietario del contrato puede gestionar.
+
+## 🎯 Características Principales
+
+- Conexión con MetaMask
+- Registro de usuarios
+- Depósitos y retiros de ETH
+- Sistema de comisiones automático
+- Gestión de tesorería para el propietario
+- ToDo: Interfaz intuitiva y responsive
 
 ## 🛠 Tecnologías Utilizadas
 
@@ -116,15 +125,6 @@ npm run dev
 ```
 
 La aplicación estará disponible en `http://localhost:5173`
-
-## 🎯 Características Principales
-
-- Conexión con MetaMask
-- Registro de usuarios
-- Depósitos y retiros de ETH
-- Sistema de comisiones automático
-- Gestión de tesorería para el propietario
-- ToDo: Interfaz intuitiva y responsive
 
 ## 💼 Uso del Contrato
 
