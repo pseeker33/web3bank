@@ -1,0 +1,504 @@
+00:00
+(https://github.com/pseeker33) Hola soy Hoover Zavala, y hoy les mostraré un proyecto web3 controlado por un contrato inteligente con el que aprobe (https://campus.ethkipu.org) el modulo 2 del Ethereum Developer Pack, un curso brindado por ETH Kipu (https://www.ethkipu.org/es#edp), una fundacion que difunde la tecnologia blockchain y la red Ethereum en Latinoamerica
+
+El proyecto simula que busca demostrar cómo podemos implementar servicios financieros utilizando contratos inteligentes, con funcionalidades de registro de usuarios, depósitos, retiros y un sistema de tesorería con comisiones.
+
+La aplicacion bancaria descentralizada muy basicadesarrollada con Solidity, React y Ethers.js que interactua con la blockchain de Ethereum.
+
+00:15
+SimpleBank es un proyecto que busca demostrar cómo podemos implementar servicios financieros utilizando contratos inteligentes, con funcionalidades de registro de usuarios, depósitos, retiros y un sistema de tesorería con comisiones.
+
+00:30
+Arquitectura Tecnológica:
+Nuestro stack de desarrollo incluye:
+- Solidity para el contrato inteligente 
+- React para el frontend
+- Ethers.js para interacción blockchain
+- Hardhat para desarrollo y testing
+- Red de pruebas Sepolia
+- Vite como bundler de React
+- Librería react-toastify para notificaciones
+
+00:50
+El proyecto está dividido en dos carpetas principales. 
+
+La carpeta contract que aloja la implementacion del contrato como:
+
+- los artefactos del contrato inteligente
+- el contrato mismo
+- el script de despliegue
+- hardhat.config.js que configura el uso de la aplicacion tanto en la red local Hardhat como en la red de pruebas de Ethereum
+- package.json donde basicamente se especifican las librerias necesarias para compilar y desplegar el contrato y que pueda interactuar con la blockchain
+
+Despues tenemos la carpeta cliente que aloja la implementación del frontend de la aplicación, como:
+
+- los scripts de React javascript
+- el ABI del contrato
+- los archivos de configuracion
+
+
+01:10
+Explicación detallada del Contrato Inteligente:
+
+El contrato SimpleBank está desarrollado en Solidity versión 0.8.26 y contempla varios componentes clave:
+
+Estructura de datos:
+- Definimos un struct User con campos:
+  * firstName (nombre)
+  * lastName (apellido) 
+  * saldo (balance)
+  * registrado (estado de registro)
+
+- Usamos un mapping para almacenar los detalles de cada usuario
+- Implementamos modificadores de seguridad:
+  * onlyOwner: Restricción de acciones al creador del contrato
+  * notTheOwner: Impide que el owner realice ciertas acciones
+  * onlyRegisteredUser: Valida que solo usuarios registrados ejecuten funciones
+
+01:45
+Funciones principales del contrato:
+Uso de modificadores para hacer validaciones de control de acceso en cada función, manejo de errores con mensajes descriptivos
+
+- registerUser(): Permite el registro de nuevos usuarios
+  * Valida que el usuario no esté previamente registrado
+  * Requiere nombre y apellido no vacíos
+  * Emite un evento de registro
+
+- deposit(): Permite a usuarios registrados depositar fondos
+  * Valida que el monto sea mayor a cero
+  * Actualiza el saldo del usuario
+  * Emite un evento de depósito
+
+- withdraw(): Gestiona el retiro de fondos
+  * Calcula una comisión sobre el monto retirado
+  * Actualiza saldos del usuario y la tesorería
+  * Transfiere fondos al usuario
+  * Emite evento de retiro
+
+- withdrawTreasury(): Permite al owner retirar fondos de la tesorería
+  * Solo accesible por el creador del contrato
+  * Valida fondos disponibles
+  * Transfiere fondos al owner
+  * Emite evento de retiro de tesorería
+
+02:30
+Explicación línea por línea de App.jsx:
+
+Importaciones clave:
+- ethers: Librería para interacción con Ethereum
+- SimpleBankABI: Definición de la interfaz del contrato
+- networkConfig: Configuraciones de red
+- react-toastify: Manejo de notificaciones
+
+Funciones principales:
+- connectWallet(): 
+  * Verifica instalación de MetaMask
+  * Valida red de conexión (Sepolia)
+  * Maneja cambio de red automático
+  * Carga detalles del contrato
+
+- loadContract(): 
+  * Crea proveedor de Ethereum
+  * Instancia el contrato con su ABI
+  * Configura signer para transacciones
+
+- checkContractDetails(): 
+  * Verifica rol del usuario (owner/usuario)
+  * Consulta estado de registro
+  * Obtiene balance de usuario y tesorería
+
+- registerUser(), deposit(), withdraw(), withdrawTreasury():
+  * Funciones de interacción con contrato
+  * Manejan transacciones
+  * Gestionan notificaciones de éxito/error
+
+03:15
+Configuración de Hardhat:
+El proyecto utiliza Hardhat como entorno de desarrollo blockchain para la compilación del contrato y para gestionar despliegues en redes locales y de prueba 
+
+- Facilita testing de contratos inteligentes
+- Configura red Sepolia para deployments
+
+Proceso de desarrollo:
+- Escritura de contrato en Solidity
+- Compilación con Hardhat
+- Generación de ABI
+- Despliegue en red de pruebas
+- Implementación de frontend con React
+- Integración con contrato mediante Ethers.js
+
+
+04:30
+Próximos Pasos:
+- Implementar más servicios financieros
+- Añadir sistema de préstamos
+- Mejorar interfaz de usuario
+- Implementar más validaciones
+- Optimizar gas en transacciones
+
+04:50
+Con SimpleBank demostramos cómo blockchain puede transformar servicios financieros tradicionales, ofreciendo transparencia, seguridad y descentralización.
+
+Muchas gracias.
+
+
+==================================================================
+EXPLICACIÓN TÉCNICA DETALLADA DE APP.JSX
+
+Análisis Técnico Detallado de App.jsx - SimpleBank
+
+Importaciones y Configuraciones Iniciales:
+
+1. Importaciones de Librerías
+```javascript
+import { useState } from "react";
+import { ethers } from "ethers";
+import SimpleBankABI from "./SimpleBankABI.json";
+import { networkConfig } from './config';
+import { ToastContainer, toast } from "react-toastify";
+Cada importación cumple un rol específico:
+
+useState: Hook de React para manejo de estado
+ethers: Librería principal para interacción con Ethereum
+SimpleBankABI: Definición de la interfaz del contrato
+networkConfig: Configuraciones de redes blockchain
+react-toastify: Biblioteca para notificaciones
+
+
+Configuración de Dirección del Contrato
+
+javascriptCopyconst contractAddress = "0xd14B23214E30Fda460205f5a5461860e1CF460a2";
+Dirección del contrato desplegado en la red Sepolia, fundamental para inicializar la instancia de contrato.
+
+Variables de Estado
+
+javascriptCopyconst [account, setAccount] = useState(null);
+const [contract, setContract] = useState(null);
+const [isOwner, setIsOwner] = useState(false);
+const [isRegistered, setIsRegistered] = useState(false);
+const [treasuryBalance, setTreasuryBalance] = useState(0);
+const [userBalance, setUserBalance] = useState(0);
+Explicación detallada de cada estado:
+
+account: Almacena la dirección de la wallet conectada
+contract: Instancia del contrato inteligente
+isOwner: Booleano que identifica si el usuario es el owner del contrato
+isRegistered: Indica si el usuario está registrado
+treasuryBalance: Saldo de la tesorería del contrato
+userBalance: Saldo del usuario actual
+
+
+Función checkNetwork()
+
+javascriptCopyconst checkNetwork = async () => {
+  const { ethereum } = window;
+  const chainId = await ethereum.request({ method: 'eth_chainId' });
+  const decimalChainId = parseInt(chainId, 16);
+  
+  if (!networkConfig[decimalChainId]) {
+    toast.error("Por favor, conecta tu wallet a la red Sepolia");
+    return false;
+  }
+  return true;
+};
+Detalles técnicos:
+
+Obtiene el Chain ID de la red actual
+Convierte el Chain ID de hexadecimal a decimal
+Valida si la red está soportada en networkConfig
+Lanza notificación de error si la red no es correcta
+
+
+Función connectWallet()
+
+javascriptCopyconst connectWallet = async () => {
+  try {
+    const { ethereum } = window;
+    if (!ethereum) return toast.error("MetaMask no está instalado");
+
+    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    const isCorrectNetwork = await checkNetwork();
+
+    if (!isCorrectNetwork) {
+      try {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0xaa36a7' }], // chainId de Sepolia en hex
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error("Por favor, cambia manualmente a la red Sepolia");
+        return;
+      }
+    }
+    setAccount(accounts[0]);
+    checkContractDetails(accounts[0]);
+  } catch (error) {
+    console.error(error);
+    toast.error("Error conectando la wallet");
+  }
+};
+Flujo de conexión de wallet:
+
+Verifica existencia de MetaMask
+Solicita cuentas disponibles
+Valida red de conexión
+Intenta cambiar automáticamente a Sepolia
+Establece cuenta conectada
+Carga detalles del contrato
+
+
+Función loadContract()
+
+javascriptCopyconst loadContract = async () => {
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const instance = new ethers.Contract(contractAddress, SimpleBankABI, signer);
+  setContract(instance);
+  return instance;
+};
+Proceso de carga del contrato:
+
+Crea proveedor de Ethereum
+Obtiene signer (cuenta que firmar transacciones)
+Instancia contrato con dirección, ABI y signer
+Guarda instancia en estado
+
+
+Funciones de Interacción
+
+javascriptCopyconst registerUser = async (firstName, lastName) => {
+  try {
+    const tx = await contract.registerUser(firstName, lastName);
+    await tx.wait();
+    toast.success("Usuario registrado con éxito");
+    setIsRegistered(true);
+  } catch (error) {
+    console.error(error);
+    toast.error("Error registrando usuario");
+  }
+};
+
+const deposit = async (amount) => {
+  try {
+    const tx = await contract.deposit({ value: ethers.parseEther(amount) });
+    await tx.wait();
+    toast.success("Depósito realizado con éxito");
+    checkContractDetails(account);
+  } catch (error) {
+    console.error(error);
+    toast.error("Error realizando depósito");
+  }
+};
+Características de las funciones de interacción:
+
+Envío de transacciones al contrato
+Espera de confirmación de transacción
+Notificaciones de éxito/error
+Actualización de estado post-transacción
+
+
+Renderizado Condicional
+
+javascriptCopyreturn (
+  <div>
+    <ToastContainer />
+    <h1>SimpleBank DApp</h1>
+    {!account ? (
+      <button onClick={connectWallet}>Conectar Wallet</button>
+    ) : (
+      // Renderizado de interfaz según rol y estado
+    )}
+  </div>
+);
+Estrategia de renderizado:
+
+Botón de conexión si no hay cuenta
+Interfaz dinámica basada en rol (owner/usuario)
+Formularios y acciones contextuales
+
+Consideraciones Adicionales:
+
+Manejo de errores mediante try/catch
+Uso de toast para retroalimentación
+Separación de lógica de negocio
+Gestión dinámica de estado
+==================================================================
+
+ANÁLISIS DETALLADO DE SIMPLEBANK.SOL
+
+Estructura General:
+solidityCopy// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract SimpleBank {
+    // Declaración de variables de estado
+    address private owner;
+    uint256 public treasuryBalance;
+    uint public fee;
+
+    // Estructura de datos para usuarios
+    struct User {
+        string firstName;
+        string lastName;
+        uint saldo;
+        bool registrado;
+    }
+
+    // Mapeo de direcciones a usuarios
+    mapping (address => User) public userDetails;
+}
+Componentes Clave:
+
+Versión de Solidity: ^0.8.26
+Variables de Estado:
+
+owner: Dirección del creador del contrato
+treasuryBalance: Saldo de la tesorería
+fee: Porcentaje de comisión por transacciones
+
+
+
+
+Modificadores de Seguridad:
+
+solidityCopymodifier onlyOwner {
+    require(msg.sender == owner, "Solo el owner puede realizar la operacion");
+    _;
+}
+
+modifier notTheOwner {
+    require(msg.sender != owner, "El owner no puede realizar la operacion");
+    _;
+}
+
+modifier onlyRegisteredUser {
+    require(userDetails[msg.sender].registrado, "Solo usuarios registrados pueden realizar la operacion");
+    _;
+}
+Funcionalidad de Modificadores:
+
+onlyOwner: Restringe funciones al creador del contrato
+notTheOwner: Impide que el owner realice ciertas acciones
+onlyRegisteredUser: Valida registro de usuario
+
+
+Constructor:
+
+solidityCopyconstructor(uint _fee) {
+    owner = msg.sender;
+    treasuryBalance = 0;
+    fee = _fee;
+}
+Detalles:
+
+Inicializa owner con la dirección que despliega
+Establece balance inicial de tesorería a 0
+Configura porcentaje de comisión
+
+
+Función de Registro de Usuario:
+
+solidityCopyfunction registerUser(string calldata _firstName, string calldata _lastName) external notTheOwner {
+    require(!userDetails[msg.sender].registrado, "Ya estas registrado");
+    require(bytes(_firstName).length > 0 && bytes(_lastName).length > 0, "Nombre o apellido vacio");
+    
+    userDetails[msg.sender].firstName = _firstName;
+    userDetails[msg.sender].lastName = _lastName;
+    userDetails[msg.sender].registrado = true;
+    
+    emit UserRegistered(msg.sender, _firstName, _lastName);
+}
+Características:
+
+Uso de calldata para optimización de gas
+Validaciones de registro
+Almacenamiento de datos de usuario
+Emisión de evento de registro
+
+
+Función de Depósito:
+
+solidityCopyfunction deposit() external payable onlyRegisteredUser {
+    require(msg.value > 0, "El monto del deposito debe ser mayor a cero");
+    userDetails[msg.sender].saldo += msg.value;
+    emit Deposit(msg.sender, msg.value);
+}
+Detalles:
+
+Modificador payable para recibir Ether
+Validación de monto
+Actualización de saldo
+Emisión de evento de depósito
+
+
+Función de Retiro:
+
+solidityCopyfunction withdraw(uint256 _amount) external onlyRegisteredUser {
+    require(userDetails[msg.sender].saldo >= _amount, "Saldo insuficiente");
+    
+    uint256 feeAmount = (_amount * fee) / 10000;
+    uint256 netAmount = _amount - feeAmount;
+    
+    userDetails[msg.sender].saldo -= _amount; 
+    treasuryBalance += feeAmount;
+    
+    (bool userSuccess, ) = msg.sender.call{value: netAmount}("");
+    require(userSuccess, "Transferencia al usuario fallida");
+    
+    emit Withdrawal(msg.sender, netAmount, feeAmount);
+}
+Mecánica de Retiro:
+
+Validación de saldo
+Cálculo de comisión
+Actualización de saldos
+Transferencia de fondos
+Manejo de comisión en tesorería
+
+
+Función de Retiro de Tesorería:
+
+solidityCopyfunction withdrawTreasury(uint256 _amount) external onlyOwner {
+    require(treasuryBalance >= _amount, "Fondos insuficientes en la tesoreria");
+    
+    treasuryBalance -= _amount;
+    (bool sentToOwner, ) = owner.call{value: _amount}("");
+    require(sentToOwner, "Error al transferir Ether al owner");
+    
+    emit TreasuryWithdrawal(owner, _amount);
+}
+Características:
+
+Restricción a owner
+Validación de fondos
+Transferencia a wallet del owner
+Emisión de evento
+
+Eventos:
+solidityCopyevent UserRegistered(address indexed user, string firstName, string lastName);
+event Deposit(address user, uint amountDeposited);
+event Withdrawal(address indexed user, uint256 amountWithdrawed, uint256 fee);
+event TreasuryWithdrawal(address indexed contractOwner, uint256 amount);
+Propósito: Registro de actividades para indexación y trazabilidad
+
+
+==================================================================
+
+
+==================================================================
+
+
+==================================================================
+
+
+==================================================================
+
+
+==================================================================
+
+
+==================================================================
+
+
+==================================================================

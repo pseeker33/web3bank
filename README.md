@@ -1,4 +1,10 @@
-# SimpleBank DApp 🏦
+# SimpleBank DApp 🏦  
+
+<p align="center">
+    <img src="./client/public/bank-crypto-ethereum.jpg"  height=500>
+    
+</p>
+
 
 [![Solidity](https://img.shields.io/badge/Solidity-%23363636.svg?style=for-the-badge&logo=solidity&logoColor=white)](https://docs.soliditylang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
