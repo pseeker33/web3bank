@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Navbar } from "./components/Navbar";
 import { ethers } from "ethers";
 import SimpleBankABI from "./SimpleBankABI.json";
@@ -62,7 +62,7 @@ function App() {
         window.ethereum.removeListener("chainChanged", () => {});
       };
     }
-  }, []);
+  }, [addToast, walletDisconnected]);
 
   // Efecto para verificar la conexión inicial
   useEffect(() => {
@@ -87,6 +87,7 @@ function App() {
 
     checkConnection();
   }, []);
+    
 
   // Función para verificar la red
   const checkNetwork = async () => {
@@ -153,7 +154,7 @@ function App() {
   };
 
   // Verificar detalles del contrato
-  const checkContractDetails = async (account) => {
+  const checkContractDetails = useCallback(async (account) => {
     try {
       const instance = await loadContract();
       if (!instance) {
@@ -192,7 +193,7 @@ function App() {
       addToast("Error al cargar los detalles del contrato", "error");
       //toast.error("Error al cargar los detalles del contrato");
     }
-  };
+  }, [loadContract, setIsOwner, setIsRegistered, setUserBalance, setTreasuryBalance, addToast]);
 
   // Conectar wallet
   const connectWallet = async () => {
@@ -231,38 +232,32 @@ function App() {
         firstName,
         lastName
       );
-      const gasLimit = BigInt(Math.ceil(Number(gasEstimate) * 1.2));
 
       const tx = await contract.registerUser(firstName, lastName, {
         from: account,
-        gasLimit: gasLimit,
+        gasLimit: BigInt(Math.ceil(Number(gasEstimate) * 1.5)), // Incremento de seguridad
+        maxPriorityFeePerGas: ethers.parseUnits('1', 'gwei'), // Fee de prioridad
+        maxFeePerGas: ethers.parseUnits('20', 'gwei') // Fee máximo
       });
 
       await tx.wait();
       addToast("Usuario registrado con éxito", "success");
-      //toast.success("Usuario registrado con éxito");
       setIsRegistered(true);
       await checkContractDetails(account);
     } catch (error) {
-      console.error("Error completo:", error);
+      console.error("Error completo en registro:", error);
 
+      // Manejo más detallado de errores
       if (error.code === "ACTION_REJECTED") {
         addToast("Transacción rechazada", "error");
-        // toast.error(
-        //   "Error en la transacción. Verifica que tengas suficiente ETH para gas"
-        // );
-      } else if (
-        error.message &&
-        error.message.includes("Ya estas registrado")
-      ) {
+      } else if (error.message?.includes("Ya estas registrado")) {
         addToast("Esta cuenta ya está registrada", "info");
-        //toast.warning("Esta cuenta ya está registrada");
-      } else if (error.message && error.message.includes("Solo el owner")) {
+      } else if (error.message?.includes("Solo el owner")) {
         addToast("La cuenta owner no puede registrarse como usuario", "info");
-        //toast.warning("La cuenta owner no puede registrarse como usuario");
+      } else if (error.code === -32603) {
+        addToast("Error interno de red. Verifica configuraciones de Hardhat", "error");
       } else {
         addToast("Error en el registro. Por favor, intenta nuevamente", "error");
-        //toast.error("Error en el registro. Por favor, intenta nuevamente");
       }
     }
   };
