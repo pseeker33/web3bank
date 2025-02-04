@@ -1,17 +1,9 @@
-# <h1 align=center> **`🏦 Web3 Project : SimpleBank Dapp 🏦`** </h1>
+# <h1 align=center> **`Proyecto Web3: SimpleBank Dapp 🏦`** </h1>
 
 <p align="center">
     <img src="./client/public/bank-crypto-ethereum.jpg"  height=400>
+    
 </p>
-
-<br>
-
-<p align="center">
-  Check out the live demo of this project  
-  <a href="https://simple-bank-dapp-fawn.vercel.app">HERE</a>
-</p>
-
-<br>
 
 
 [![Solidity](https://img.shields.io/badge/Solidity-%23363636.svg?style=for-the-badge&logo=solidity&logoColor=white)](https://docs.soliditylang.org/)
@@ -21,28 +13,27 @@
 [![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![ethers.js](https://img.shields.io/badge/ethers.js-2535a0?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAERSURBVDiNpdM/S5VhGIfx72NKELQkQYsNbiK0BG3hW+gNtFQgRLQ0t7i5aA4JQeDS4Oa7EF0dpHcQGsIhCIRQa4j4KzheHc7peR44Z7kv7ut7nfv+nZBSQghRHMISvuEHZjCKL1hBd845p5RyBXfxF9+xhk+4wC/s4zYGcqkq7xvYxDb2sIV32E2Nr9DS14AXOMYnzGEcH7CFU7wt3TXOqzeBp1jECB7gGe7hENPYwzqe4wjbWL0ywFp6RI8QYgIvsY8vmMR0zvkQbzCBebzCWkopX9nUrxDCC4xhMed8FkJoYxJHOc9JKY19wEMcYyeldBZC6GAaDe2U0u9m838YfzjPW616b8r/x5kQwmBK6axX/BvJ+GGyHnPytQAAAABJRU5ErkJggg==)](https://docs.ethers.org/v6/)
 
+SimpleBank es una DApp que simula las funciones básicas de un banco descentralizado en la blockchain de Ethereum. Permite a los usuarios conectar sus wallets MetaMask, registrarse, realizar depósitos y retiros, mientras cobra una pequeña comisión que se acumula en una tesorería que solo el propietario del contrato puede gestionar.
 
-SimpleBank is a DApp that simulates the basic functions of a decentralized bank on the Ethereum blockchain. It allows users to connect their MetaMask wallets, register, make deposits and withdrawals, while charging a small fee that accumulates in a treasury that only the contract owner can manage.
+## 🎯 Características Principales
 
-## 🎯 Main Features
+- Conexión con MetaMask
+- Registro de usuarios
+- Depósitos y retiros de ETH
+- Sistema de comisiones automático
+- Gestión de tesorería para el propietario
+- ToDo: Interfaz intuitiva y responsive
 
-- MetaMask integration
-- User registration
-- ETH deposits and withdrawals
-- Automatic fee system
-- Treasury management for the owner
-- ToDo: Intuitive and responsive interface
-
-## 🛠 Technologies Used
+## 🛠 Tecnologías Utilizadas
 
 - **Smart Contracts**: Solidity ^0.8.26
-- **Development/Testing**: Hardhat
+- **Desarrollo/Testing**: Hardhat
 - **Frontend**: React + Vite
 - **Blockchain Interaction**: ethers.js v6
 - **Wallet**: MetaMask
 - **Styling**: CSS
 
-## 📁 Project Structure
+## 📁 Estructura del Proyecto
 
 ```
 SimpleBank/
@@ -65,121 +56,129 @@ SimpleBank/
     └── vite.config.js
 ```
 
-### 📝 Main Files
+### 📝 Archivos Principales
 
-- `contract/contracts/SimpleBank.sol`: Main smart contract that handles all banking logic
-- `contract/scripts/deploy.js`: Script to deploy the contract on the network
-- `client/src/App.jsx`: Main React component handling the user interface
-- `client/src/SimpleBankABI.json`: Contract ABI required for frontend-contract interaction
+- `contract/contracts/SimpleBank.sol`: Contrato inteligente principal que maneja toda la lógica bancaria
+- `contract/scripts/deploy.js`: Script para desplegar el contrato en la red
+- `client/src/App.jsx`: Componente principal de React que maneja la interfaz de usuario
+- `client/src/SimpleBankABI.json`: ABI del contrato necesario para la interacción frontend-contrato
 
-## 🚀 Installation and Usage Guide
+## 🚀 Guía de Instalación y Uso
 
-### Prerequisites
+### Prerrequisitos
 
 - Node.js >= 14.0.0
-- MetaMask installed in the browser
+- MetaMask instalado en el navegador
 - Git
 
-### Step 1: Clone the Repository
+### Paso 1: Clonar el Repositorio
 
 ```bash
 git clone https://github.com/pseeker33/SimpleBank.git
 cd SimpleBank
 ```
 
-### Step 2: Install Dependencies
+### Paso 2: Instalar Dependencias
 
 ```bash
-# Install contract dependencies
+# Instalar dependencias del contrato
 cd contract
 npm install
 
-# Install client dependencies
+# Instalar dependencias del cliente
 cd ../client
 npm install
 ```
 
-### Step 3: Set Up Local Hardhat Network
+### Paso 3: Configurar Red Local de Hardhat
 
-1. Start the Hardhat local node:
+1. Inicia el nodo local de Hardhat:
 ```bash
-cd contract
+cd Contract
 npx hardhat node
 ```
 
-2. Configure MetaMask with the local network:
+2. Configura MetaMask con la red local:
    - **Network Name**: Hardhat Local
    - **New RPC URL**: http://127.0.0.1:8545/
    - **Chain ID**: 1337
    - **Currency Symbol**: ETH
 
-3. Import test accounts:
-   - From the Hardhat local node, copy the private key of the first account (Account #0), as this is the contract owner's account.
-   - Copy the private key of any other account and use them as bank users.
-   - In MetaMask: "Import Account" -> Paste the private key
+3. Importa las cuentas de prueba:
+   - Del nodo local de Hardhat, copia la clave privada de la primera cuenta (Account #0), pues esa es la cuenta del propietario del contrato
+   - Copia la clave privada de cualquiera de las cuentas siguientes y úsalos como usuarios del banco.
+   - En MetaMask: "Importar Cuenta" -> Pega la clave privada
 
-### Step 4: Deploy the Contract
+### Paso 4: Desplegar el Contrato
 
-In a new terminal:
+En una nueva terminal:
 ```bash
-cd contract
+cd Contract
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-### Step 5: Start the Frontend
+### Paso 5: Iniciar el Frontend
 
 ```bash
 cd client
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+La aplicación estará disponible en `http://localhost:5173`
 
-## 💼 Contract Usage
+## 💼 Uso del Contrato
 
-### For Users
-1. Connect your MetaMask wallet
-2. Register with your first and last name
-3. Make deposits and withdrawals (a 5% withdrawal fee applies)
+### Para Usuarios
+1. Conecta tu wallet MetaMask
+2. Regístrate con tu nombre y apellido
+3. Realiza depósitos y retiros (se aplica una comisión del 5% en los retiros)
 
-### For the Owner
-1. Connect the owner wallet
-2. Monitor accumulated fees
-3. Withdraw treasury funds whenever desired
+### Para el Propietario
+1. Conecta la wallet propietaria
+2. Monitorea las comisiones acumuladas
+3. Retira los fondos de la tesorería cuando lo desees
 
-### Requirements to Test
-1. Install [MetaMask](https://metamask.io/)
-2. Connect your wallet to the Sepolia network
-3. Get test ETH from [Sepolia Faucet](https://cloud.google.com/application/web3/faucet)
+## 🌐 DApp en Vivo
 
-Note: Only the contract owner can withdraw treasury funds.
+Prueba la DApp en: [https://simple-bank-dapp-fawn.vercel.app](https://simple-bank-dapp-fawn.vercel.app)
 
-## 🤝 Contributions
+### Requisitos para Probar
+1. Instala [MetaMask](https://metamask.io/)
+2. Conecta tu wallet a la red Sepolia
+3. Obtén ETH de prueba en [Sepolia Faucet](https://cloud.google.com/application/web3/faucet)  
 
-Contributions are always welcome. Please follow these steps:
+Obs: recuerda que sólo el propietario del contrato puede retirar fondos de la tesorería  
 
-1. Fork the project
-2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add: Amazing Feature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🤝 Contribuciones
 
-## ⭐️ Show Your Support
+Las contribuciones son siempre bienvenidas. Por favor, sigue estos pasos:
 
-If this project has been useful to you, consider [giving it](https://github.com/pseeker33/web3bank/stargazers) a ⭐. It means a lot to me!
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add: Amazing Feature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
-## 📫 Contact
+## ⭐️ Muestra tu Apoyo
+
+Si este proyecto te ha sido útil, considera [regalame](https://github.com/pseeker33/web3bank/stargazers) una ⭐. ¡Significa mucho para mí!
+
+## 📫 Contacto
 
 **Hoover Zavala**  
-**Data Analyst | Web Developer | Blockchain Enthusiast | Python | Bubble.io | React.js | Solidity**  
+**Data analyst | Web developer | Blockchain enthusiast | Python | Bubble.io | React.js | Solidity**  
 
 zavalah222@gmail.com      
 [![Follow us on LinkedIn](https://img.shields.io/badge/LinkedIn-pseeker-blue?style=flat&logo=linkedin&logoColor=b0c0c0&labelColor=363D44)](https://www.linkedin.com/in/hoover-zavala-63a64825b/)  
 [![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2Fpseeker222&label=%40pseeker222)](https://twitter.com/pseeker222)
 
-## 📝 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+## 📝 Licencia
+
+Distribuido bajo la licencia MIT. Ver `LICENSE` para más información.
 
 ---
 
+[![made-with-solidity](https://img.shields.io/badge/Made%20with-Solidity-gray.svg?style=for-the-badge&logo=solidity)](https://soliditylang.org/)
+[![built-with-hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow?style=for-the-badge)](https://hardhat.org/)
+[![made-with-react](https://img.shields.io/badge/Made%20with-React-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
