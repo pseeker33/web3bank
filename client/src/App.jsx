@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Navbar } from "./components/Navbar";
+import { TransactionModal } from './components/TransactionModal';
 import { ethers } from "ethers";
 import SimpleBankABI from "./SimpleBankABI.json";
 import { networkConfig } from "./config";
+import { FaEthereum, FaWallet, FaUser, FaDownload, FaUpload } from 'react-icons/fa';
 import { useToast } from "./context/ToastProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -16,6 +17,10 @@ function App() {
   const [treasuryBalance, setTreasuryBalance] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
   const [walletDisconnected, setWalletDisconnected] = useState(false); // Estado para evitar mensajes duplicados
+  const [modalConfig, setModalConfig] = useState({ isOpen: false, type: null });
+  const [isLoading, setIsLoading] = useState({ balance: false, transaction: false });
+
+
 
   // Función para resetear el estado
   const resetState = () => {
@@ -37,7 +42,6 @@ function App() {
         if (accounts.length === 0) {
           if (!walletDisconnected) {
             addToast("Wallet desconectada", "info");
-            //toast.info("Wallet desconectada");
             setWalletDisconnected(true); // Marcar como desconectado para no mostrar el toast repetidamente
           }
           // MetaMask está desconectado
@@ -311,120 +315,142 @@ function App() {
     }
   };
 
-  // Renderizado
-  return (
-    <div>
-      <ToastContainer
-        position="bottom-center" // Esta es la clave para ponerlo abajo centrado
-        autoClose={3000} // Puedes ajustar cuánto tiempo permanecen los toasts
-        hideProgressBar // Ocultar la barra de progreso si no la necesitas
-        newestOnTop={true} // Para que el nuevo toast se muestre encima
-      />
-      <Navbar
-        account={account}
-        balance={userBalance}
-        isRegistered={isRegistered}
-        setAccount={setAccount}
-        onConnectWallet={connectWallet}
-      />
-      <div className="main-container">
-        <h1>SimpleBank DApp</h1>
-        {!account ? (
-          <button onClick={connectWallet}>Conectar Wallet</button>
-        ) : (
-          <div>
-            <p>Conectado: {account}</p>
-            {isOwner && <p>Rol: Owner</p>}
-            {!isRegistered && !isOwner && (
-              <div>
+  const handleTransaction = async (type, amount) => {
+    setIsLoading({ ...isLoading, transaction: true });
+    try {
+      if (type === 'deposit') await deposit(amount);
+      else if (type === 'withdraw') await withdraw(amount);
+      else if (type === 'treasury') await withdrawTreasury(amount);
+    } finally {
+      setIsLoading({ ...isLoading, transaction: false });
+    }
+  };
+
+
+// Renderizado
+return (
+  <div>
+    <ToastContainer position="bottom-center" autoClose={3000} hideProgressBar newestOnTop={true} />
+    <Navbar
+      account={account}
+      balance={userBalance}
+      isRegistered={isRegistered}
+      isOwner={isOwner}
+      setAccount={setAccount}
+      onConnectWallet={connectWallet}
+    />
+    
+    <div className="main-container">
+      {/* <h1>SimpleBank DApp</h1> */}
+      
+      {!account ? (
+        <div className="card" >
+          <h2>Conecta tu Wallet</h2>
+          <FaWallet size={48} color="#60a5fa" style={{ marginBottom: "3rem" }}/>
+          <button onClick={connectWallet}>
+            <FaWallet /> Conectar MetaMask
+          </button>
+        </div>
+      ) : (
+        <div className="dashboard-grid">
+          {!isRegistered && !isOwner && (
+            <div className="card">
                 <h2>Registro</h2>
-                <form
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    const { firstName, lastName } = e.target.elements;
-
-                    //Validamos los campos antes de enviar la transacción
-                    if (!firstName.value || !lastName.value) {
-                      addToast("Por favor completa todos los campos", "info");
-                      //toast.error("Por favor completa todos los campos");
-                      return;
-                    }
-
-                    // Deshabilitamos el botón durante el registro
-                    e.target.querySelector("button").disabled = true;
-
-                    try {
-                      await registerUser(
-                        firstName.value.trim(),
-                        lastName.value.trim()
-                      );
-                    } finally {
-                      // Rehabilitamos el botón
-                      e.target.querySelector("button").disabled = false;
-                    }
-                  }}
-                >
-                  <input
-                    name="firstName"
-                    placeholder="Nombre"
-                    required
-                    minLength="2"
-                    maxLength="50"
-                  />
-                  <input
-                    name="lastName"
-                    placeholder="Apellido"
-                    required
-                    minLength="2"
-                    maxLength="50"
-                  />
-                  <button type="submit">Registrarse</button>
+                <div className="wallet-address">
+                  <FaWallet />
+                  <span>Wallet:</span>
+                  {`${account.slice(0, 4)}...${account.slice(-4)}`}
+                </div>   
+                <form className="formulario" onSubmit={async (e) => {
+                  e.preventDefault();
+                  const { firstName, lastName } = e.target.elements;
+                  if (!firstName.value || !lastName.value) {
+                    addToast("Completa todos los campos", "info");
+                    return;
+                  }
+                  e.target.querySelector("button").disabled = true;
+                  try {
+                    await registerUser(firstName.value.trim(), lastName.value.trim());
+                  } finally {
+                    e.target.querySelector("button").disabled = false;
+                  }
+                }}>
+                  <input name="firstName" placeholder="Nombre" required minLength="2" maxLength="50" />
+                  <input name="lastName" placeholder="Apellido" required minLength="2" maxLength="50" />
+                  <button type="submit">
+                    <FaUser /> Registrarse
+                  </button>
                 </form>
+            </div>
+          )}
+
+          {isRegistered && (
+            <div className="card">
+              <h2>Operaciones</h2>
+              <div className="wallet-address">
+                <FaUser />
+                <span>Usuario:</span>
+                {`${account.slice(0, 4)}...${account.slice(-4)}`}
               </div>
-            )}
-            {isRegistered && (
-              <div>
-                <h2>Cuenta</h2>
-                <p>Saldo: {userBalance} ETH</p>
-                <button
-                  onClick={() => {
-                    const amount = prompt("¿Cuánto quieres depositar?");
-                    if (amount) deposit(amount);
-                  }}
-                >
-                  Depositar
-                </button>
-                <button
-                  onClick={() => {
-                    const amount = prompt("¿Cuánto quieres retirar?");
-                    if (amount) withdraw(amount);
-                  }}
-                >
-                  Retirar
-                </button>
+              <div className="balance-container">
+                <FaEthereum size={32} color="#60a5fa" />
+                <span className="balance-amount">{userBalance} ETH</span>
               </div>
-            )}
-            {isOwner && (
-              <div>
-                <h2>Tesorería</h2>
-                <p>Saldo Tesorería: {treasuryBalance} ETH</p>
-                <button
-                  onClick={() => {
-                    const amount = prompt(
-                      "¿Cuánto quieres retirar de la tesorería?"
-                    );
-                    if (amount) withdrawTreasury(amount);
-                  }}
+              <div className="transactions">
+                <button 
+                  onClick={() => setModalConfig({ isOpen: true, type: 'deposit' })}
+                  disabled={isLoading.transaction}
                 >
-                  Retirar Tesorería
+                  <FaDownload /> Depositar
+                </button>
+                <button 
+                  onClick={() => setModalConfig({ isOpen: true, type: 'withdraw' })}
+                  disabled={isLoading.transaction}
+                >
+                  <FaUpload /> Retirar
                 </button>
               </div>
-            )}
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+
+          {isOwner && (
+            <div className="card">
+              <h2>Tesorería</h2>
+
+              <div className="wallet-address">
+                <FaUser />
+                <span>Owner:</span>
+                {`${account.slice(0, 4)}...${account.slice(-4)}`}
+              </div>
+              <div className="balance-container">
+                <FaEthereum size={32} color="#60a5fa" />
+                <span className="balance-amount">{treasuryBalance} ETH</span>
+              </div>
+              <button 
+                onClick={() => setModalConfig({ isOpen: true, type: 'treasury' })}
+                disabled={isLoading.transaction}
+              >
+                <FaUpload /> Retirar Tesorería
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
-  );
+
+    <TransactionModal
+      isOpen={modalConfig.isOpen}
+      onClose={() => setModalConfig({ isOpen: false, type: null })}
+      onSubmit={(amount) => handleTransaction(modalConfig.type, amount)}
+      title={
+        modalConfig.type === 'deposit' ? 'Depositar ETH' :
+        modalConfig.type === 'withdraw' ? 'Retirar ETH' :
+        'Retirar de Tesorería'
+      }
+      type={modalConfig.type}
+    />
+  </div>
+);
 }
 
 export default App;
