@@ -11,8 +11,12 @@
   <a href="https://simple-bank-dapp-fawn.vercel.app">HERE</a>
 </p>
 
-<br>
+<p align="center">
+  Read this in <a href="README-es.md">Spanish</a> / Lee este archivo en <a href="README-es.md">español</a>
+</p>
 
+
+<br>
 
 [![Solidity](https://img.shields.io/badge/Solidity-%23363636.svg?style=for-the-badge&logo=solidity&logoColor=white)](https://docs.soliditylang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -183,3 +187,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
+[![made-with-solidity](https://img.shields.io/badge/Made%20with-Solidity-gray.svg?style=for-the-badge&logo=solidity)](https://soliditylang.org/)
+[![built-with-hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow?style=for-the-badge)](https://hardhat.org/)
+[![made-with-react](https://img.shields.io/badge/Made%20with-React-blue?style=for-the-badge&logo=react)](https://reactjs.org/)
